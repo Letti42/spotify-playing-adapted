@@ -63,7 +63,7 @@ async function createSvg(host) {
     <text class="one" y="325" x="202" style="opacity:${repeat == "track" ? "1" : "0"}">1</text>
     ${redirectSvg}
     ${time.dur}
-    ${time.overlay}
+    ${track.is_playing ? time.overlay : ""}
 </svg>
 `;
 
