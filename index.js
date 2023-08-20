@@ -125,6 +125,7 @@ setInterval(async () => {
     let t = await getPlayingTrack(access_token);
     if (t == null) return pauseTrack();
     if (t?.item == null) return pauseTrack();
+    console.log(t.item.external_urls);
     songUrl = t?.item?.external_urls?.spotify;
     fs.writeFileSync("track.json", JSON.stringify(t));
     svg.createSvg(host);
@@ -138,6 +139,7 @@ async function isMyUser(ac) {
 }
 
 app.get("/link/player", (req, res) => {
+    console.log(songUrl);
     songUrl.length ? res.redirect(songUrl):res.status(200).send("Can't redirect you quite yet! Try again in a few seconds.");
 })
 
