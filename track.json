@@ -20,7 +20,7 @@
         "type": "playlist",
         "uri": "spotify:playlist:48G8avkAtGwtFPy7N3nM3s"
     },
-    "progress_ms": 100671,
+    "progress_ms": 11000,
     "item": {
         "album": {
             "album_type": "album",
@@ -470,7 +470,7 @@
             "XK"
         ],
         "disc_number": 1,
-        "duration_ms": 207454,
+        "duration_ms": 110500,
         "explicit": false,
         "external_ids": {
             "isrc": "GBUM71706492"
@@ -494,5 +494,5 @@
             "resuming": true
         }
     },
-    "is_playing": false
+    "is_playing": true
 }

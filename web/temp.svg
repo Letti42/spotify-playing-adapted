@@ -42,19 +42,16 @@
 
 		.sec_one{
             animation-duration: 10s;
-            animation-iteration-count: infinite;
 			animation-timing-function: step-end;
 		}
 
 		.sec_ten{
             animation-duration: 60s;
-            animation-iteration-count: infinite;
 			animation-timing-function: step-end;
 		}
 
 		.min{
             animation-duration: 600s;
-            animation-iteration-count: infinite;
 			animation-timing-function: step-end;
 		}
 
@@ -101,6 +98,15 @@
 
 			10%, 100%{
 				opacity:0;
+			}
+		}
+
+		@keyframes restore{
+			0%{
+				visibility:hidden;
+			}
+			100%{
+				visibility:visible;
 			}
 		}
 	</style>
