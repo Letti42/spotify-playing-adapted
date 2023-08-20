@@ -5,7 +5,8 @@ const he = require('he');
 
 async function createSvg(host){
     let track = JSON.parse(fs.readFileSync("track.json", "utf-8"))
-    let img = await downloadAlbumImage(track.item.album.images[1].url);
+    //if img was already downloaded, use that b64 data; otherwise download and save new image
+    let img = checkImg(track.item.album.images[1].url) ? fs.readFileSync("b64", "utf-8") : await downloadAlbumImage(track.item.album.images[1].url);
     let title = track.item.name;
     let artists = filterArtists(track);
     let duration = track.item.duration_ms / 1000; //in seconds;
@@ -192,11 +193,19 @@ function filterArtists(track){
     return artists;
 }
 
+function checkImg(url){
+    let lastURL = fs.readFileSync("image", "utf-8");
+    return lastURL === url;
+}
+
 async function downloadAlbumImage(url){
     let response = await fetch(url);
     let buf = await response.arrayBuffer();
     let b64 = Buffer.from(buf).toString("base64");
-    return `data:image/jpeg;base64,${b64}`;
+    b64 = `data:image/jpeg;base64,${b64}`;
+    fs.writeFileSync("image", url);
+    fs.writeFileSync("b64", b64);
+    return b64;
 }
 
 function createSvgText(text, color, size) {
