@@ -179,7 +179,7 @@ function getCurrentTime(prog){
 }
 
 function initPlayingIcon(p){
-    return p ? `<rect height="16" width="4" y="315" x="150" stroke="#21ca1e" fill="#1bde18"></rect> <rect height="16" width="4" y="345" x="160" stroke="#21ca1e" fill="#1bde18"></rect>` :
+    return p ? `<rect height="16" width="4" y="315" x="150" stroke="#21ca1e" fill="#1bde18"></rect> <rect height="16" width="4" y="315" x="160" stroke="#21ca1e" fill="#1bde18"></rect>` :
     `<polygon points="150,314 150,332 165,323" style="fill:#696969;" />`
 }
 
