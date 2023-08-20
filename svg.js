@@ -1,10 +1,11 @@
 const TextToSVG = require('text-to-svg');
+const fetch = require('cross-fetch');
 const fs = require("fs");
 const he = require('he');
 
 async function createSvg(host){
     let track = JSON.parse(fs.readFileSync("track.json", "utf-8"))
-    let img = track.item.album.images[1].url;
+    let img = await downloadAlbumImage(track.item.album.images[1].url);
     let title = track.item.name;
     let artists = filterArtists(track);
     let duration = track.item.duration_ms / 1000; //in seconds;
@@ -189,6 +190,13 @@ function filterArtists(track){
     else artists = artists.join(" ");
     artists = artists.replace(/\s\s+/g, " ");
     return artists;
+}
+
+async function downloadAlbumImage(url){
+    let response = await fetch(url);
+    let buf = await response.arrayBuffer();
+    let b64 = Buffer.from(buf).toString("base64");
+    return `data:image/jpeg;base64,${b64}`;
 }
 
 function createSvgText(text, color, size) {
