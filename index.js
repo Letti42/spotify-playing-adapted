@@ -17,6 +17,7 @@ const host = "https://spotify-playing-letti42.onrender.com";
 var access_token;
 var refreshToken;
 var userFound = false;
+var songUrl = "";
 
 
 app.get('/login', function (req, res) {
@@ -59,7 +60,7 @@ app.get('/callback1', async (req, res) => {
             },
             json: true
         };
-        request.post(authOptions, async(err, response, body) => {
+        request.post(authOptions, async (err, response, body) => {
             if (!body.access_token) return;
             let check = await isMyUser(body.access_token);
             if (check) {
@@ -79,19 +80,19 @@ app.get('/done', (req, res) => {
 
 
 app.use("/", express.static("web"));
-app.get("/player.svg", (req,res)=>{
-  res.set("Content-Type", "image/svg+xml");
-  res.sendFile(__dirname+"/web/player.svg");
+app.get("/player.svg", (req, res) => {
+    res.set("Content-Type", "image/svg+xml");
+    res.sendFile(__dirname + "/web/player.svg");
 })
 
 
-app.get('/', (req,res)=>{
+app.get('/', (req, res) => {
     res.send("hello!");
 })
 
-setInterval(()=>{
+setInterval(() => {
     fetch(host);
-  }, (1000 * 60)) // request page to stay up every minute
+}, (1000 * 60)) // request page to stay up every minute
 
 async function coolRefresh() {
     var authOptions = {
@@ -115,19 +116,19 @@ async function coolRefresh() {
 
 
 setInterval(() => {
-    if(access_token)coolRefresh();
+    if (access_token) coolRefresh();
 }, (10 * 60 * 1000)) //10 minutes refresh token
 
 
-setInterval(async()=>{
-    if(!userFound)return;
+setInterval(async () => {
+    if (!userFound) return;
     let t = await getPlayingTrack(access_token);
-    if(t == null)return pauseTrack();
-    if(t?.item == null)return pauseTrack();
-    setLink(t);
+    if (t == null) return pauseTrack();
+    if (t?.item == null) return pauseTrack();
+    songUrl = t?.item?.external_urls?.spotify;
     fs.writeFileSync("track.json", JSON.stringify(t));
     svg.createSvg(host);
-}, (1000*10)); // 10 seconds get the playing track
+}, (1000 * 10)); // 10 seconds get the playing track
 
 
 async function isMyUser(ac) {
@@ -136,13 +137,12 @@ async function isMyUser(ac) {
     return user?.email === process.env.EMAIL;
 }
 
-function setLink(t){
-    app.get("/link/player", (req,res)=>{
-      res.redirect(t?.item?.external_urls?.spotify);
-    })
-  }
+app.get("/link/player", (req, res) => {
+    songUrl.length ? res.redirect(songUrl):res.status(200).send("Can't redirect you quite yet! Try again in a few seconds.");
+})
 
-function pauseTrack(){
+
+function pauseTrack() {
     let json = JSON.parse(fs.readFileSync("track.json", "utf-8"));
     json.is_playing = false;
     fs.writeFileSync("track.json", JSON.stringify(json));
